@@ -34,6 +34,7 @@ public class WeatherStation implements Runnable {
     public void run() {
         int reading;           // actual sensor read.
         double celsius;        // sensor read transformed to celsius
+        double kelvin;         // sensor reads the temperature in kelvin 
         final int KTOC = -27315;   // Convert raw Kelvin read to Celsius
 
         while (true) {
@@ -44,6 +45,7 @@ public class WeatherStation implements Runnable {
 
             reading = sensor.read();
             celsius = (reading + KTOC) / 100.0;
+            kelvin = (celsius+295.15);
             /*
              * System.out.printf prints formatted data on the output screen.
              *
@@ -60,7 +62,7 @@ public class WeatherStation implements Runnable {
              * See docs.oracle.com/javase/tutorial/java/data/numberformat.html
              * for more information on formatting output.
              */
-            System.out.printf("Reading is %6.2f degrees C%n", celsius);
+            System.out.printf("Reading is %6.2f degrees C and %6.2f degrees K%n", celsius, kelvin);
         }
     }
 
