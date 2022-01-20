@@ -1,5 +1,5 @@
 
-/**
+/*
  * Class for a simple computer based weather station that reports the current
  * temperature (in Celsius) every second. The station is attached to a sensor
  * that reports the temperature as a 16-bit number (0 to 65535) representing the
@@ -9,7 +9,9 @@
  * which runs the periodic sensing.
  *
  * @author Michael J. Lutz
- * @author Kristina Marasovic
+ * @author Kristina Marasovicc
+ * @author Fran Krsto Hrabric
+ * @author Vanesa Moric
  * @version 1
  */
 public class WeatherStation implements Runnable {
