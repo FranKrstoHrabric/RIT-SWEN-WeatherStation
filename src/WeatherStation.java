@@ -1,5 +1,5 @@
 
-/*
+/**
  * Class for a simple computer based weather station that reports the current
  * temperature (in Celsius) every second. The station is attached to a sensor
  * that reports the temperature as a 16-bit number (0 to 65535) representing the
@@ -15,10 +15,12 @@
  */
 public class WeatherStation implements Runnable {
 
-    private int reading;           // actual sensor read.
     private final TemperatureSensor sensor; // Temperature sensor.
 
     private final long PERIOD = 1000;      // 1 sec = 1000 ms.
+
+    private int reading;           // actual sensor read.
+    private final int KTOC = -27315;   // Convert raw Kelvin read to Celsius
 
     /*
      * When a WeatherStation object is created, it in turn creates the sensor
@@ -28,44 +30,22 @@ public class WeatherStation implements Runnable {
         sensor = new TemperatureSensor();
     }
 
+    
+
     /*
      * The "run" method called by the enclosing Thread object when started.
      * Repeatedly sleeps a second, acquires the current temperature from
      * its sensor, and reports this as a formatted output string.
      */
     public void run() {
-        double celsius;        // sensor read transformed to celsius
-        double kelvin;         // sensor reads the temperature in kelvin 
-        final int KTOC = -27315;   // Convert raw Kelvin read to Celsius
-
+       
         while (true) {
-
-
             reading = sensor.read();
-            celsius = (reading + KTOC) / 100.0;
-            kelvin = (celsius+273.15);
-            /*
-             * System.out.printf prints formatted data on the output screen.
-             *
-             * Most characters print as themselves.
-             *
-             * % introduces a format command that usually applies to the
-             * next argument of printf:
-             *   *  %6.2f formats the "celsius" (2nd) argument in a field
-             *      at least 6 characters wide with 2 fractional digits.
-             *   *  The %n at the end of the string forces a new line
-             *      of output.
-             *   *  %% represents a literal percent character.
-             *
-             * See docs.oracle.com/javase/tutorial/java/data/numberformat.html
-             * for more information on formatting output.
-             */
-            System.out.printf("Reading is %6.2f degrees C and %6.2f degrees K%n", celsius, kelvin);
-
-            try {
-                Thread.sleep(PERIOD);
-            } catch (Exception e) {
-            }    // ignore exceptions
+            
+            System.out.printf("Reading is %6.2f degrees C and %6.2f degrees K%n", 
+            TemperatureUnit.CELSIUS.get(reading),TemperatureUnit.KELVIN.get(reading));
+            
+            try { Thread.sleep(PERIOD);} catch (Exception e) { }    // ignore exceptions
         }
     }
 
@@ -79,5 +59,25 @@ public class WeatherStation implements Runnable {
         WeatherStation ws = new WeatherStation();
         Thread thread = new Thread(ws);
         thread.start();
-    }
-}
+    }// end of main
+
+
+    //
+     enum TemperatureUnit{
+
+        CELSIUS(-27315),KELVIN(0);
+        private final int conversionFactor;
+
+        private TemperatureUnit(int conversionFactor) {
+            this.conversionFactor = conversionFactor;
+        }//end 
+
+        public double get(int reading ) {
+            return (reading + conversionFactor) / 100.0;
+        }//end 
+
+    }//end of enum
+    
+    
+
+} //end of class
