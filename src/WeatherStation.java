@@ -9,13 +9,13 @@
  * which runs the periodic sensing.
  *
  * @author Michael J. Lutz
- * @author Kristina Marasovicc
+ * @author Kristina Marasovic
  * @author Fran Krsto Hrabric
- * @author Vanesa Moric
  * @version 1
  */
 public class WeatherStation implements Runnable {
 
+    private int reading;           // actual sensor read.
     private final TemperatureSensor sensor; // Temperature sensor.
 
     private final long PERIOD = 1000;      // 1 sec = 1000 ms.
@@ -34,16 +34,12 @@ public class WeatherStation implements Runnable {
      * its sensor, and reports this as a formatted output string.
      */
     public void run() {
-        int reading;           // actual sensor read.
         double celsius;        // sensor read transformed to celsius
         double kelvin;         // sensor reads the temperature in kelvin 
         final int KTOC = -27315;   // Convert raw Kelvin read to Celsius
 
         while (true) {
-            try {
-                Thread.sleep(PERIOD);
-            } catch (Exception e) {
-            }    // ignore exceptions
+
 
             reading = sensor.read();
             celsius = (reading + KTOC) / 100.0;
@@ -65,6 +61,11 @@ public class WeatherStation implements Runnable {
              * for more information on formatting output.
              */
             System.out.printf("Reading is %6.2f degrees C and %6.2f degrees K%n", celsius, kelvin);
+
+            try {
+                Thread.sleep(PERIOD);
+            } catch (Exception e) {
+            }    // ignore exceptions
         }
     }
 
